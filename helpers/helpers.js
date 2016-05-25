@@ -28,79 +28,43 @@ const singleMatch = axios.create({
   }
 });
 
+// return a promise with summoner info
 function getSummonerId(name) {
-  summonerByName.get('/' + name.toString())
-  .then((res) => {
-    console.log(res.data);
-  })
-  .catch((res) => {
-    if (res instanceof Error) {
-      // Something in request triggered an error
-      console.log('Error', res.message);
-    } else {
-      // request made but not 2xx status code
-      console.log(res.data, res.status, res.headers, res.config);
-    }
+  return new Promise((resolve, reject) => {
+    summonerByName.get('/' + name.toString())
+    .then((response) => {
+      resolve(response.data);
+    })
+    .catch((response) => {
+      reject(response);
+    });
   });
 }
 
+// return a promise with matchlist of a summoner
 function getMatchList(id) {
-  matchList.get('/' + id)
-  .then((res) => {
-
-    const matchListTeam3x3 = res.data.matches.filter((match) => {
-      return match.queue === 'RANKED_TEAM_3x3';
+  return new Promise((resolve, reject) => {
+    matchList.get('/' + id)
+    .then((response) => {
+      resolve(response.data);
+    })
+    .catch((response) => {
+      reject(response);
     });
-
-    const matchListSolo5x5 = res.data.matches.filter((match) => {
-      return match.queue === 'TEAM_BUILDER_DRAFT_RANKED_5x5';
-    });
-
-  })
-  .catch((res) => {
-    if (res instanceof Error) {
-      // Something in request triggered an error
-      console.log('Error', res.message);
-    } else {
-      // request made but not 2xx status code
-      console.log(res.data, res.status, res.headers, res.config);
-    }
   });
 }
 
+// return a promise with the match info
 function getMatch(id) {
-  singleMatch.get('/' + id)
-  .then((res) => {
-    let participants = res.data.participants;
-    let participantIdentities = res.data.participantIdentities;
-    let queueType = res.data.queueType;
-    let teams = res.data.teams;
-
-    // figure out which champs won and which champs lost
-    // participants.stats.winner
-    // add the match to the database
-    Match.findOneAndUpdate({matchId: id}, {
-      participants: participants,
-      participantIdentities: participantIdentities,
-      queueType: queueType,
-      teams: teams
-    }, {upsert: true, new: true}, (err, doc) => {
-      if (!err) {
-        console.log('this is doc', doc);
-      } else {
-        console.log('Error retrieving match: ', err);
-      }
-    });
-  })
-  .catch((res) => {
-    if (res instanceof Error) {
-      // Something in request triggered an error
-      console.log('Error', res.message);
-    } else {
-      // request made but not 2xx status code
-      console.log(res.data, res.status, res.headers, res.config);
-    }
-  })
+  return new Promise((resolve, reject) => {
+    singleMatch.get('/' + id)
+    .then((response) => {
+      resolve(response.data);
+    })
+    .catch((response) => {
+      reject(response);
+    })
+  });
 }
 
 export default {
