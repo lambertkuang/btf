@@ -39,3 +39,4 @@ Thumbs.db
 private/
 node_modules/
 public/
+server.bundle.js

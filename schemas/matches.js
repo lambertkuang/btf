@@ -4,8 +4,10 @@ const Schema = mongoose.Schema;
 
 const matchSchema = new Schema({
   matchId: Number,
+  queueType: String,
   participants: [],
-  champions: []
+  participantIdentities: [],
+  teams: []
 });
 
 const Match = mongoose.model('Match', matchSchema);

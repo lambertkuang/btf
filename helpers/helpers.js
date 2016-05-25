@@ -69,18 +69,28 @@ function getMatchList(id) {
 }
 
 function getMatch(id) {
-  // make sure the match is not already in the database
-
   singleMatch.get('/' + id)
   .then((res) => {
-    // check if the match already exists in the match database
-    // go through the champions in the match and check if each champion won or lost
-    // add that number to the champion database
-    // add that match to the match database ?
     let participants = res.data.participants;
     let participantIdentities = res.data.participantIdentities;
+    let queueType = res.data.queueType;
+    let teams = res.data.teams;
 
-
+    // figure out which champs won and which champs lost
+    // participants.stats.winner
+    // add the match to the database
+    Match.findOneAndUpdate({matchId: id}, {
+      participants: participants,
+      participantIdentities: participantIdentities,
+      queueType: queueType,
+      teams: teams
+    }, {upsert: true, new: true}, (err, doc) => {
+      if (!err) {
+        console.log('this is doc', doc);
+      } else {
+        console.log('Error retrieving match: ', err);
+      }
+    });
   })
   .catch((res) => {
     if (res instanceof Error) {
