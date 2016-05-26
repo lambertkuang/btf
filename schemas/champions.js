@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const championSchema = new Schema({
-  name: String,
   championId: Number,
+  championName: String,
   gamesWon: Number,
   gamesTotal: Number
 });
