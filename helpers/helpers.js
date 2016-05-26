@@ -1,8 +1,6 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import Champion from '../schemas/champions';
-import Match from '../schemas/matches';
 
 const API_KEY = fs.readFileSync(path.join(__dirname, '../private/api_key.txt')).toString();
 
