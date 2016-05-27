@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 
 const championSchema = new Schema({
   championId: Number,
-  gamesWon: Number,
-  gamesTotal: Number,
-  gamesBanned: Number
+  gamesWon: {type: Number, default: 0},
+  gamesTotal: {type: Number, default: 0},
+  gamesBanned: {type: Number, default: 0}
 });
 
 const Champion = mongoose.model('Champion', championSchema);

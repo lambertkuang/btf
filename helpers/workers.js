@@ -58,7 +58,7 @@ function parseMatchAndChamp(id) {
           }
         });
 
-        // update ban rate for champion
+        // update ban rate for champion; bannedChamps is an array of champion Ids
         let bannedChamps = match.teams.map((team) => {
           return team.bans.map((champ) => {
             return champ.championId;
@@ -68,8 +68,8 @@ function parseMatchAndChamp(id) {
           return cur.concat(next);
         });
 
-        bannedChamps.forEach((champ) => {
-          Champion.findOneAndUpdate({championId: champ.championId}, {
+        bannedChamps.forEach((championId) => {
+          Champion.findOneAndUpdate({championId: championId}, {
             $inc: {gamesBanned: 1}
           }, {upsert: true, new: true}, (err, champion) => {
             if (err) {
