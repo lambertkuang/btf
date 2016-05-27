@@ -27,7 +27,58 @@ function parseMatchAndChamp(id) {
         });
 
         // determine which champions won and update them
+        let champInfo = match.participants.map((info) => {
+          return {
+            championId: info.championId,
+            winner: info.stats.winner
+          };
+        });
 
+        champInfo.forEach((champ) => {
+          if (champ.winner) {
+            Champion.findOneAndUpdate({championId: champ.championId}, {
+              $inc: {gamesWon: 1, gamesTotal: 1}
+            }, {upsert: true, new: true}, (err, champion) => {
+              if (err) {
+                console.log('Error updating champion: ', err);
+              } else {
+                console.log('Successfully updated champion: ', champion);
+              }
+            });
+          } else {
+            Champion.findOneAndUpdate({championId: champ.championId}, {
+              $inc: {gamesTotal: 1}
+            }, {upsert: true, new: true}, (err, champion) => {
+              if (err) {
+                console.log('Error updating champion: ', err);
+              } else {
+                console.log('Successfully updated champion: ', champion);
+              }
+            });
+          }
+        });
+
+        // update ban rate for champion
+        let bannedChamps = match.teams.map((team) => {
+          return team.bans.map((champ) => {
+            return champ.championId;
+          });
+        })
+        .reduce((cur, next) => {
+          return cur.concat(next);
+        });
+
+        bannedChamps.forEach((champ) => {
+          Champion.findOneAndUpdate({championId: champ.championId}, {
+            $inc: {gamesBanned: 1}
+          }, {upsert: true, new: true}, (err, champion) => {
+            if (err) {
+              console.log('Error updating banned Champs: ', err);
+            } else {
+              console.log('Successfully updated banned champ: ', champion);
+            }
+          });
+        });
       })
       .catch((res) => {
         console.log('Error with getting match: ', res);
