@@ -1,10 +1,9 @@
 import helper from './helpers';
 import Match from '../schemas/matches';
 import Champion from '../schemas/champions';
+import Summoner from '../schemas/summoners';
 
-// need function to check if the match is already in the database
-// if it is, don't do anything
-// otherwise, add the match and update data for each champion in the match
+// TODO: handle errors
 
 function parseMatchAndChamp(id) {
   Match.count({matchId: id}, (err, count) => {
@@ -87,6 +86,29 @@ function parseMatchAndChamp(id) {
   })
 }
 
+function parseSummonerMatches(id) {
+  Summoner.count({summonerId: id}, (err, count) => {
+    if (count === 0) {
+      helper.getMatchList(id)
+      .then((matchData) => {
+        Summoner.findOneAndUpdate({summonerId: id}, {
+          matches: matchData.matches
+        }, {upsert: true, new: true}, (err, summoner) => {
+          if (err) {
+            console.log('Error updating Summoner history: ', err);
+          } else {
+            console.log('Successfully updated summoner: ', summoner);
+          }
+        });
+      })
+      .catch((res) => {
+        console.log('Error with getting match history: ', res);
+      });
+    }
+  });
+}
+
 export default {
-  parseMatchAndChamp: parseMatchAndChamp
+  parseMatchAndChamp: parseMatchAndChamp,
+  parseSummonerMatches: parseSummonerMatches
 };

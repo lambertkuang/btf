@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 
 const API_KEY = fs.readFileSync(path.join(__dirname, '../private/api_key.txt')).toString();
+const days = 10;
+const daysAgo = days * 24 * 60 * 60 * 1000;
 
 const summonerByName = axios.create({
   baseURL: 'https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/',
@@ -16,6 +18,7 @@ const matchList = axios.create({
   params: {
     api_key: API_KEY,
     seasons: 'SEASON2016'
+    // beginTime: Date.now() - daysAgo
   }
 });
 
