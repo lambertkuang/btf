@@ -1,114 +1,34 @@
 import helper from './helpers';
-import Match from '../schemas/matches';
 import Champion from '../schemas/champions';
+import Match from '../schemas/matches';
 import Summoner from '../schemas/summoners';
 
-// TODO: handle errors
+// summonerId for ftlulz
+const seedId = 40944736;
 
-function parseMatchAndChamp(id) {
-  Match.count({matchId: id}, (err, count) => {
-    if (count === 0) {
-      // retrieve match from Riot API and save the match
-      helper.getMatch(id)
-      .then((match) => {
-        let newMatch = new Match({
-          matchId: id,
-          queueType: match.queueType,
-          participants: match.participants,
-          participantIdentities: match.participantIdentities,
-          teams: match.teams
-        });
-
-        newMatch.save((err) => {
-          if (err) {
-            console.log('Error saving match to db: ', err);
-          }
-        });
-
-        // determine which champions won and update them
-        let champInfo = match.participants.map((info) => {
-          return {
-            championId: info.championId,
-            winner: info.stats.winner
-          };
-        });
-
-        champInfo.forEach((champ) => {
-          if (champ.winner) {
-            Champion.findOneAndUpdate({championId: champ.championId}, {
-              $inc: {gamesWon: 1, gamesTotal: 1}
-            }, {upsert: true, new: true}, (err, champion) => {
-              if (err) {
-                console.log('Error updating champion: ', err);
-              } else {
-                console.log('Successfully updated champion: ', champion);
-              }
-            });
-          } else {
-            Champion.findOneAndUpdate({championId: champ.championId}, {
-              $inc: {gamesTotal: 1}
-            }, {upsert: true, new: true}, (err, champion) => {
-              if (err) {
-                console.log('Error updating champion: ', err);
-              } else {
-                console.log('Successfully updated champion: ', champion);
-              }
-            });
-          }
-        });
-
-        // update ban rate for champion; bannedChamps is an array of champion Ids
-        let bannedChamps = match.teams.map((team) => {
-          return team.bans.map((champ) => {
-            return champ.championId;
-          });
-        })
-        .reduce((cur, next) => {
-          return cur.concat(next);
-        });
-
-        bannedChamps.forEach((championId) => {
-          Champion.findOneAndUpdate({championId: championId}, {
-            $inc: {gamesBanned: 1}
-          }, {upsert: true, new: true}, (err, champion) => {
-            if (err) {
-              console.log('Error updating banned Champs: ', err);
-            } else {
-              console.log('Successfully updated banned champ: ', champion);
-            }
-          });
-        });
-      })
-      .catch((res) => {
-        console.log('Error with getting match: ', res);
-      });
-    }
+function fillEmUp() {
+  // what to do if the summoner id has already been seen?
+  Promise.resolve(helper.parseSummonerMatches(seedId)).then((summoner) => {
+    // get all the match Ids for that summoner
+    console.log('this is summoner ======>', summoner);
+    return summoner.matches.map((match) => {
+      return match.matchId;
+    });
   })
-}
-
-function parseSummonerMatches(id) {
-  Summoner.count({summonerId: id}, (err, count) => {
-    if (count === 0) {
-      helper.getMatchList(id)
-      .then((matchData) => {
-        Summoner.findOneAndUpdate({summonerId: id}, {
-          matches: matchData.matches
-        }, {upsert: true, new: true}, (err, summoner) => {
-          if (err) {
-            console.log('Error updating Summoner history: ', err);
-          } else {
-            console.log('Successfully updated summoner: ', summoner);
-          }
-        });
-      })
-      .catch((res) => {
-        console.log('Error with getting match history: ', res);
-      });
-    }
+  .then((matches) => {
+    // go through each of the matches and store info into dbs
+    console.log('matches =-====-===>> ', matches);
+    return Promise.all(matches.map((match) => {
+      return Promise.resolve(helper.parseMatchAndChamp(match));
+    }));
+  })
+  .then(() => {
+    // restart process with a new summoner Id
+    console.log('Done with this first round');
+  })
+  .catch((err) => {
+    console.log('Error somewhere in the chain: ', err);
   });
 }
 
-export default {
-  parseMatchAndChamp: parseMatchAndChamp,
-  parseSummonerMatches: parseSummonerMatches
-};
+export { fillEmUp };

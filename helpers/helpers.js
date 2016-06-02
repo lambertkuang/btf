@@ -4,6 +4,7 @@ import path from 'path';
 import Match from '../schemas/matches';
 import Champion from '../schemas/champions';
 import Summoner from '../schemas/summoners';
+// import _ from 'lodash';
 
 const API_KEY = fs.readFileSync(path.join(__dirname, '../private/api_key.txt')).toString();
 const days = 10;
@@ -156,24 +157,28 @@ function parseMatchAndChamp(id) {
 }
 
 function parseSummonerMatches(id) {
-  Summoner.count({summonerId: id}, (err, count) => {
-    if (count === 0) {
-      getMatchList(id)
-      .then((matchData) => {
-        Summoner.findOneAndUpdate({summonerId: id}, {
-          matches: matchData.matches
-        }, {upsert: true, new: true}, (err, summoner) => {
-          if (err) {
-            console.log('Error updating Summoner history: ', err);
-          } else {
-            console.log(summoner.summonerId, 'Successfully updated summoner');
-          }
+  return new Promise((resolve, reject) => {
+    Summoner.count({summonerId: id}, (err, count) => {
+      if (count === 0) {
+        getMatchList(id)
+        .then((matchData) => {
+          Summoner.findOneAndUpdate({summonerId: id}, {
+            matches: matchData.matches
+          }, {upsert: true, new: true}, (err, summoner) => {
+            if (err) {
+              console.log('Error updating Summoner history: ', err);
+              reject(err);
+            } else {
+              console.log(summoner.summonerId, 'Successfully updated summoner');
+              resolve(summoner);
+            }
+          });
+        })
+        .catch((res) => {
+          console.log('Error with getting match history: ', res);
         });
-      })
-      .catch((res) => {
-        console.log('Error with getting match history: ', res);
-      });
-    }
+      }
+    });
   });
 }
 
