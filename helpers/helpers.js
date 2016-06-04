@@ -4,8 +4,9 @@ import path from 'path';
 import Match from '../schemas/matches';
 import Champion from '../schemas/champions';
 import Summoner from '../schemas/summoners';
-// import _ from 'lodash';
+import Bottleneck from 'bottleneck';
 
+const limiter = new Bottleneck(1, 1000);
 const API_KEY = fs.readFileSync(path.join(__dirname, '../private/api_key.txt')).toString();
 const days = 10;
 const daysAgo = days * 24 * 60 * 60 * 1000;
@@ -87,10 +88,11 @@ function getMatchFromDb(id) {
 // TODO: handle errors
 
 function parseMatchAndChamp(id) {
+
   Match.count({matchId: id}, (err, count) => {
     if (count === 0) {
       // retrieve match from Riot API and save the match
-      getMatch(id)
+      limiter.schedule(getMatch, id)
       .then((match) => {
         let newMatch = new Match({
           matchId: id,
@@ -108,7 +110,7 @@ function parseMatchAndChamp(id) {
 
         // store each player into summoner db
         Promise.all(match.participantIdentities.map((participant) => {
-          return Promise.resolve(parseSummonerMatches(participant.player.summonerId));
+          return parseSummonerMatches(participant.player.summonerId);
         }))
         .then(() => {
           console.log('Done adding summoners to db');
@@ -160,7 +162,7 @@ function parseSummonerMatches(id) {
   return new Promise((resolve, reject) => {
     Summoner.count({summonerId: id}, (err, count) => {
       if (count === 0) {
-        getMatchList(id)
+        limiter.schedule(getMatchList, id)
         .then((matchData) => {
           Summoner.findOneAndUpdate({summonerId: id}, {
             matches: matchData.matches
