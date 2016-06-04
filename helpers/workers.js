@@ -7,27 +7,22 @@ import Summoner from '../schemas/summoners';
 const seedId = 40944736;
 
 function fillEmUp() {
-  // what to do if the summoner id has already been seen?
-  Promise.resolve(helper.parseSummonerMatches(seedId)).then((summoner) => {
-    // get all the match Ids for that summoner
-    console.log('this is summoner ======>', summoner);
+  helper.parseSummonerMatches(seedId)
+  .then((summoner) => {
     return summoner.matches.map((match) => {
       return match.matchId;
     });
   })
   .then((matches) => {
-    // go through each of the matches and store info into dbs
-    console.log('matches =-====-===>> ', matches);
     return Promise.all(matches.map((match) => {
-      return Promise.resolve(helper.parseMatchAndChamp(match));
+      return helper.parseMatchAndChamp(match);
     }));
   })
   .then(() => {
-    // restart process with a new summoner Id
-    console.log('Done with this first round');
+    console.log('Done with first round');
   })
   .catch((err) => {
-    console.log('Error somewhere in the chain: ', err);
+    console.log('Error somewhere: ', err);
   });
 }
 
