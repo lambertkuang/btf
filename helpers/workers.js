@@ -20,10 +20,35 @@ function fillEmUp() {
   })
   .then(() => {
     console.log('Done with first round');
+    // get more matches
   })
   .catch((err) => {
     console.log('Error somewhere: ', err);
   });
 }
 
-export { fillEmUp };
+function getMoreMatches() {
+  // go through summoner db and parse each summoner's matches
+  Summoner.find((err, summoners) => {
+    let allMatches = summoners.map((summoner) => {
+      return summoner.matches;
+    })
+    .reduce((cur, next) => {
+      return cur.concat(next);
+    });
+    Promise.all(allMatches.map((match) => {
+      return helper.parseMatchAndChamp(match.matchId);
+    }))
+    .then(() => {
+      console.log('all matches from all summoners in db have been parsed');
+    })
+    .catch((err) => {
+      console.log('Error parsing matches from summonersdb: ', err);
+    });
+  });
+}
+
+export {
+  fillEmUp,
+  getMoreMatches
+};
