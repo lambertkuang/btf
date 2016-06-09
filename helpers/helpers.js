@@ -6,7 +6,8 @@ import Champion from '../schemas/champions';
 import Summoner from '../schemas/summoners';
 import Bottleneck from 'bottleneck';
 
-const limiter = new Bottleneck(1, 1000);
+// 1 request per 1.5s
+const limiter = new Bottleneck(1, 1500);
 const API_KEY = fs.readFileSync(path.join(__dirname, '../private/api_key.txt')).toString();
 const days = 10;
 const daysAgo = days * 24 * 60 * 60 * 1000;
@@ -22,8 +23,8 @@ const matchList = axios.create({
   baseURL: 'https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/',
   params: {
     api_key: API_KEY,
-    seasons: 'SEASON2016'
-    // beginTime: Date.now() - daysAgo
+    // seasons: 'SEASON2016'
+    beginTime: Date.now() - daysAgo
   }
 });
 
