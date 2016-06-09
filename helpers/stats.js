@@ -1,7 +1,7 @@
 import Champion from '../schemas/champions';
 import Match from '../schemas/matches';
 
-function calculateStats () {
+function calculateStats (cb) {
   Match.count((err, numMatches) => {
     Champion.aggregate([
       {
@@ -15,14 +15,17 @@ function calculateStats () {
           },
           banRate: {
             $divide: ['$gamesBanned', numMatches]
-          }
+          },
+          gamesWon: '$gamesWon',
+          gamesTotal: '$gamesTotal',
+          gamesBanned: '$gamesBanned'
         }
       }
     ], (err, result) => {
       if (err) {
         console.log('Error aggregate', err);
       } else {
-        console.log('Results: ', result);
+        cb(result);
       }
     });
   });
