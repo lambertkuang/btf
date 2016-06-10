@@ -15,7 +15,6 @@ export default class Home extends React.Component {
     // get static champion data (names)
     axios.get('/api/names').then((res) => {
       let nameData = {};
-      console.log('resdatadata', res.data.data);
       for (let champ in res.data.data) {
         let champData = res.data.data[champ];
         nameData[champData.id] = champ;
@@ -37,7 +36,7 @@ export default class Home extends React.Component {
 
   sortData() {
     return this.state.data.map((champ) => {
-      return <li>{this.state.nameData[champ.championId]}: {champ.winRate}</li>;
+      return <li key={champ.championId}>{this.state.nameData[champ.championId]}: {champ.winRate}</li>;
     });
   }
 
