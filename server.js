@@ -7,6 +7,10 @@ import routes from './components/routes';
 import {renderToString} from 'react-dom/server';
 import mongoose from 'mongoose';
 import helper from './helpers/helpers';
+import {fillEmUp, getMoreMatches} from './helpers/workers';
+import {calculateStats, calculate3v3Stats} from './helpers/stats';
+import Match from './schemas/matches';
+import {apiApp} from './api';
 
 const app = express();
 
@@ -14,7 +18,9 @@ app.use(compression());
 
 app.use(express.static(path.join(__dirname, 'public'), {index: false}));
 
-app.get('*', (req, res) => {
+app.use('/api', apiApp);
+
+app.get('/', (req, res) => {
   match({routes: routes, location: req.url}, (err, redirect, props) => {
     if (err) {
       res.status(500).send(err.message);
@@ -28,8 +34,6 @@ app.get('*', (req, res) => {
     }
   });
 });
-
-// helper.getMatch(2193394945);
 
 function renderPage(appHtml) {
   return `
@@ -59,6 +63,10 @@ mongoose.connect(uristring, (err, res) => {
     console.log('Successful connecting to ' + uristring);
   }
 });
+
+// fillEmUp();
+// calculateStats();
+// getMoreMatches();
 
 app.listen(PORT, () => {
   console.log('Production server running at localhost:' + PORT);
