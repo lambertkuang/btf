@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Match from '../schemas/matches';
 import Champion from '../schemas/champions';
+import Champion3v3 from '../schemas/champions3v3';
 import Summoner from '../schemas/summoners';
 import Bottleneck from 'bottleneck';
 
@@ -74,18 +75,6 @@ function getMatch(id) {
   });
 }
 
-function getMatchFromDb(id) {
-  return new Promise((resolve, reject) => {
-    Match.findOne({matchId: id}, (err, match) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(match);
-      }
-    });
-  });
-}
-
 // TODO: handle errors
 
 function parseMatchAndChamp(id) {
@@ -123,7 +112,11 @@ function parseMatchAndChamp(id) {
             championId: info.championId,
             winner: info.stats.winner
           };
-          return Promise.resolve(updateChampion(champData));
+          if (match.queueType === 'RANKED_TEAM_3x3') {
+            return Promise.resolve(updateChampion(champData, true));
+          } else {
+            return Promise.resolve(updateChampion(champData, false));
+          }
         }))
         .then(() => {
           console.log('Champions updated');
@@ -143,7 +136,11 @@ function parseMatchAndChamp(id) {
         });
 
         Promise.all(bannedChamps.map((id) => {
-          return Promise.resolve(updateBannedChampion(id));
+          if (match.queueType === 'RANKED_TEAM_3x3') {
+            return Promise.resolve(updateBannedChampion(id, true));
+          } else {
+            return Promise.resolve(updateBannedChampion(id, false));
+          }
         }))
         .then(() => {
           console.log('Updated banned champions');
@@ -185,47 +182,82 @@ function parseSummonerMatches(id) {
   });
 }
 
-function updateChampion(champ) {
-  if (champ.winner) {
-    Champion.findOneAndUpdate({championId: champ.championId}, {
-      $inc: {gamesWon: 1, gamesTotal: 1}
-    }, {upsert: true, new: true}, (err, champion) => {
-      if (err) {
-        console.log('Error updating champion: ', err);
-      } else {
-        console.log('Successfully updated champion: ', champion);
-      }
-    });
+function updateChampion(champ, threes) {
+  if (threes) {
+    if (champ.winner) {
+      Champion3v3.findOneAndUpdate({championId: champ.championId}, {
+        $inc: {gamesWon: 1, gamesTotal: 1}
+      }, {upsert: true, new: true}, (err, champion) => {
+        if (err) {
+          console.log('Error updating champion: ', err);
+        } else {
+          console.log('Successfully updated champion: ', champion);
+        }
+      });
+    } else {
+      Champion3v3.findOneAndUpdate({championId: champ.championId}, {
+        $inc: {gamesTotal: 1}
+      }, {upsert: true, new: true}, (err, champion) => {
+        if (err) {
+          console.log('Error updating champion: ', err);
+        } else {
+          console.log('Successfully updated champion: ', champion);
+        }
+      });
+    }
   } else {
-    Champion.findOneAndUpdate({championId: champ.championId}, {
-      $inc: {gamesTotal: 1}
-    }, {upsert: true, new: true}, (err, champion) => {
-      if (err) {
-        console.log('Error updating champion: ', err);
-      } else {
-        console.log('Successfully updated champion: ', champion);
-      }
-    });
+    if (champ.winner) {
+      Champion.findOneAndUpdate({championId: champ.championId}, {
+        $inc: {gamesWon: 1, gamesTotal: 1}
+      }, {upsert: true, new: true}, (err, champion) => {
+        if (err) {
+          console.log('Error updating champion: ', err);
+        } else {
+          console.log('Successfully updated champion: ', champion);
+        }
+      });
+    } else {
+      Champion.findOneAndUpdate({championId: champ.championId}, {
+        $inc: {gamesTotal: 1}
+      }, {upsert: true, new: true}, (err, champion) => {
+        if (err) {
+          console.log('Error updating champion: ', err);
+        } else {
+          console.log('Successfully updated champion: ', champion);
+        }
+      });
+    }
   }
 }
 
-function updateBannedChampion(championId) {
-  Champion.findOneAndUpdate({championId: championId}, {
-    $inc: {gamesBanned: 1}
-  }, {upsert: true, new: true}, (err, champion) => {
-    if (err) {
-      console.log('Error updating banned Champs: ', err);
-    } else {
-      console.log('Successfully updated banned champ: ', champion);
-    }
-  });
+function updateBannedChampion(championId, threes) {
+  if (threes) {
+    Champion3v3.findOneAndUpdate({championId: championId}, {
+      $inc: {gamesBanned: 1}
+    }, {upsert: true, new: true}, (err, champion) => {
+      if (err) {
+        console.log('Error updating banned Champs: ', err);
+      } else {
+        console.log('Successfully updated banned champ: ', champion);
+      }
+    });
+  } else {
+    Champion.findOneAndUpdate({championId: championId}, {
+      $inc: {gamesBanned: 1}
+    }, {upsert: true, new: true}, (err, champion) => {
+      if (err) {
+        console.log('Error updating banned Champs: ', err);
+      } else {
+        console.log('Successfully updated banned champ: ', champion);
+      }
+    });
+  }
 }
 
 export default {
   getSummonerId: getSummonerId,
   getMatchList: getMatchList,
   getMatch: getMatch,
-  getMatchFromDb: getMatchFromDb,
   parseMatchAndChamp: parseMatchAndChamp,
   parseSummonerMatches: parseSummonerMatches
 };
