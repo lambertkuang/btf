@@ -1,5 +1,5 @@
 import express from 'express';
-import {calculateStats} from './helpers/stats';
+import {calculateStats, calculate3v3Stats} from './helpers/stats';
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
@@ -10,6 +10,12 @@ const apiApp = express();
 
 apiApp.get('/stats', (req, res, next) => {
   calculateStats((data) => {
+    res.send(data);
+  });
+});
+
+apiApp.get('/3v3', (req, res, next) => {
+  calculate3v3Stats((data) => {
     res.send(data);
   });
 });
