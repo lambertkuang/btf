@@ -36,8 +36,11 @@ function getMoreMatches() {
     .reduce((cur, next) => {
       return cur.concat(next);
     });
+
     Promise.all(allMatches.map((match) => {
-      return helper.parseMatchAndChamp(match.matchId);
+      if (match) {
+        return helper.parseMatchAndChamp(match.matchId);
+      }
     }))
     .then(() => {
       console.log('all matches from all summoners in db have been parsed');
