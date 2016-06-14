@@ -6,6 +6,7 @@ export default class Home extends React.Component {
   constructor() {
     super();
     this.state = {
+      loading: true,
       nameData: {},
       data: []
     };
@@ -13,28 +14,30 @@ export default class Home extends React.Component {
 
   getData() {
     // get static champion data (names)
-    axios.get('/api/names').then((res) => {
+    function getNames() {
+      return axios.get('/api/names');
+    }
+    function getStats() {
+      return axios.get('/api/stats');
+    }
+
+    axios.all([getNames(), getStats()])
+    .then(axios.spread((names, stats) => {
       let nameData = {};
-      for (let champ in res.data.data) {
-        let champData = res.data.data[champ];
+      for (let champ in names.data.data) {
+        let champData = names.data.data[champ];
         nameData[champData.id] = champ;
       }
       this.setState({nameData: nameData});
-    })
-    .catch((res) => {
-      console.log('err getting static: ', res);
-    });
-
-    // get champion win rates and stuff
-    axios.get('/api/stats').then((res) => {
-      this.setState({data: res.data});
-    })
-    .catch((res) => {
-      console.log('api get err', res);
-    });
+      this.setState({data: stats.data});
+      this.setState({loading: false});
+    }));
   }
 
   sortData() {
+    if (this.state.loading) {
+      return <div>Loading data...</div>;
+    }
     return this.state.data.map((champ) => {
       return <li key={champ.championId}>{this.state.nameData[champ.championId]}: {champ.winRate}</li>;
     });
