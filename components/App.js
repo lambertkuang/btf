@@ -4,10 +4,14 @@ import NavBar from './NavBar';
 
 export default React.createClass({
   render() {
+    const headerStyle = {
+      marginTop: '2em'
+    };
+
     return (
       <div>
         <NavBar/>
-        <h1>Champion Stats</h1>
+        <h1 style={headerStyle}>Champion Stats</h1>
         {this.props.children}
       </div>
     );

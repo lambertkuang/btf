@@ -1,6 +1,6 @@
 import React from 'react';
-import TopChamps from './TopChamps';
 import axios from 'axios';
+import Portrait from './Portrait';
 
 export default class Home extends React.Component {
   constructor() {
