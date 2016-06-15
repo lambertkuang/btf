@@ -8,27 +8,25 @@ export default class Portrait extends React.Component {
   render() {
     const portraitBox = {
       border: 'black solid 2px',
-      width: '10em',
-      height: '10em',
+      width: '8em',
+      height: '8em',
       margin: '2px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'flex-end',
-      textAlign: 'center'
+      alignItems: 'center'
     };
 
-    const nameStyle = {
-
-    };
-
-    const winStyle = {
-
+    const picStyle = {
+      height: '4em',
+      width: '4em'
     };
 
     return (
       <div style={portraitBox}>
+        <img style={picStyle} src={'http://ddragon.leagueoflegends.com/cdn/6.12.1/img/champion/' + this.props.name + '.png'}/>
         <div>{this.props.name}</div>
-        <div>{this.props.winRate}</div>
+        <div>{this.props.winRate.toFixed(2)}</div>
       </div>
     );
   }
