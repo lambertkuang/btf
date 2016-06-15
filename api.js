@@ -34,5 +34,6 @@ apiApp.get('/names', (req, res, next) => {
   .catch((err) => {
     console.log('Error getting static data: ', err);
   });
-})
+});
+
 export { apiApp };

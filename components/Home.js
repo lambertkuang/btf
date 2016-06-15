@@ -39,7 +39,11 @@ export default class Home extends React.Component {
       return <div>Loading data...</div>;
     }
     return this.state.data.map((champ) => {
-      return <li key={champ.championId}>{this.state.nameData[champ.championId]}: {champ.winRate}</li>;
+      return (
+        <li key={champ.championId}>
+          <Portrait name={this.state.nameData[champ.championId]} winRate={champ.winRate} />
+        </li>
+      );
     });
   }
 
@@ -48,9 +52,15 @@ export default class Home extends React.Component {
   }
 
   render() {
+    const listStyle = {
+      listStyle: 'none',
+      display: 'flex',
+      flexWrap: 'wrap'
+    };
+
     return (
       <div>
-        <ul>
+        <ul style={listStyle}>
           {this.sortData()}
         </ul>
       </div>
