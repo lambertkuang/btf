@@ -8,7 +8,7 @@ export default class Portrait extends React.Component {
   render() {
     const portraitBox = {
       border: 'black solid 2px',
-      width: '8em',
+      width: '6em',
       height: '8em',
       margin: '2px',
       display: 'flex',

@@ -65,7 +65,6 @@ mongoose.connect(uristring, (err, res) => {
 });
 
 // fillEmUp();
-// calculateStats();
 // getMoreMatches();
 
 app.listen(PORT, () => {
