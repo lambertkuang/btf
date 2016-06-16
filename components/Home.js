@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Portrait from './Portrait';
+import Champions from './Champions';
 
 export default class Home extends React.Component {
   constructor() {
@@ -8,8 +9,10 @@ export default class Home extends React.Component {
     this.state = {
       loading: true,
       nameData: {},
-      data: []
+      data: [],
+      showAll: false
     };
+    this.showAll = this.showAll.bind(this);
   }
 
   getData() {
@@ -70,6 +73,10 @@ export default class Home extends React.Component {
     this.getData();
   }
 
+  showAll() {
+    this.setState({showAll: !this.state.showAll});
+  }
+
   render() {
     const listStyle = {
       listStyle: 'none',
@@ -77,11 +84,26 @@ export default class Home extends React.Component {
       flexWrap: 'wrap'
     };
 
-    const top5Style ={
+    const top5Style = {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
     };
+
+    const downArrow = {
+      width: 0,
+      height: 0,
+      borderLeft: '20px solid transparent',
+      borderRight: '20px solid transparent',
+      borderTop: '20px solid pink'
+    };
+
+    const showAllStyle = {
+      display: 'flex',
+      justifyContent: 'center'
+    };
+
+    const showText = this.state.showAll ? 'Hide' : 'Show all';
 
     return (
       <div>
@@ -91,9 +113,16 @@ export default class Home extends React.Component {
             {this.getTop5()}
           </ul>
         </div>
-        <ul style={listStyle}>
-          {this.sortData()}
-        </ul>
+
+        <div onClick={this.showAll} style={showAllStyle}>
+          <div style={downArrow}></div>
+          <div>{showText}</div>
+          <div style={downArrow}></div>
+        </div>
+
+        <div>
+          {this.state.showAll ? <Champions names={this.state.nameData} champions={this.state.data} /> : null}
+        </div>
       </div>
     );
   }
