@@ -31,6 +31,7 @@ export default class NavBar extends React.Component {
           <li style={listStyle}><NavLink to='/' onlyActiveOnIndex={true}>Home</NavLink></li>
           <li style={listStyle}><NavLink to='/about'>About</NavLink></li>
           <li style={listStyle}><NavLink to='/repos'>Repos</NavLink></li>
+          <li style={listStyle}><NavLink to='/twistedtreeline'>TwistedTreeline</NavLink></li>
         </ul>
       </div>
     );

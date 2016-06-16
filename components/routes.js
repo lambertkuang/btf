@@ -5,6 +5,7 @@ import About from './About';
 import Home from './Home';
 import Repo from './Repo';
 import Repos from './Repos';
+import TwistedTreeline from './TwistedTreeline';
 
 module.exports = (
   <Route path='/' component={App}>
@@ -12,6 +13,7 @@ module.exports = (
     <Route path='/repos' component={Repos}>
       <Route path='/repos/:userName/:repoName' component={Repo}/>
     </Route>
+    <Route path='/twistedtreeline' component={TwistedTreeline}/>
     <Route path='/about' component={About}/>
   </Route>
 );

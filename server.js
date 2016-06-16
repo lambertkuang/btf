@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public'), {index: false}));
 
 app.use('/api', apiApp);
 
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
   match({routes: routes, location: req.url}, (err, redirect, props) => {
     if (err) {
       res.status(500).send(err.message);

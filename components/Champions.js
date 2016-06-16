@@ -19,7 +19,7 @@ export default class Champions extends React.Component {
           this.props.champions.map((champ) => {
             return (
               <li key={champ.championId}>
-                <Portrait name={this.props.names[champ.championId]} winRate={champ.winRate} />
+                <Portrait name={this.props.names[champ.championId]} winRate={champ.winRate || 0} />
               </li>
             );
           })
