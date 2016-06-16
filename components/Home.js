@@ -100,16 +100,19 @@ export default class Home extends React.Component {
 
     const showAllStyle = {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      marginTop: '2em'
     };
 
     const showText = this.state.showAll ? 'Hide' : 'Show all';
+    const loading = this.state.loading ? 'Loading...' : '';
 
     return (
       <div>
         <div style={top5Style}>
           <h2>Top 5 Win Rates</h2>
           <ul style={listStyle}>
+            {loading}
             {this.getTop5()}
           </ul>
         </div>
