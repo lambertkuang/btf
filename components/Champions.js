@@ -14,7 +14,7 @@ export default class Champions extends React.Component {
     };
 
     return (
-      <ul style={listStyle}>
+      <ul className='fade-in' style={listStyle}>
         {
           this.props.champions.map((champ) => {
             return (
