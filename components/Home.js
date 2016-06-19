@@ -10,7 +10,8 @@ export default class Home extends React.Component {
       loading: true,
       nameData: {},
       data: [],
-      showAll: false
+      showAll: false,
+      firstLoad: true
     };
     this.showAll = this.showAll.bind(this);
   }
@@ -75,6 +76,7 @@ export default class Home extends React.Component {
 
   showAll() {
     this.setState({showAll: !this.state.showAll});
+    this.setState({firstLoad: !this.state.firstLoad ? this.state.firstLoad : false});
   }
 
   render() {
@@ -123,8 +125,8 @@ export default class Home extends React.Component {
           <div style={downArrow}></div>
         </div>
 
-        <div>
-          {this.state.showAll ? <Champions names={this.state.nameData} champions={this.state.data} /> : null}
+        <div className={this.state.firstLoad ? 'hidden' : ''}>
+          <Champions fade={this.state.showAll} names={this.state.nameData} champions={this.state.data} />
         </div>
       </div>
     );

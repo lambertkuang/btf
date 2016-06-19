@@ -10,7 +10,8 @@ export default class TwistedTreeline extends React.Component {
       data: [],
       nameData: {},
       loading: true,
-      showAll: false
+      showAll: false,
+      firstLoad: true
     };
     this.showAll = this.showAll.bind(this);
   }
@@ -74,6 +75,7 @@ export default class TwistedTreeline extends React.Component {
 
   showAll() {
     this.setState({showAll: !this.state.showAll});
+    this.setState({firstLoad: !this.state.firstLoad ? this.state.firstLoad : false});
   }
 
   render() {
@@ -122,8 +124,8 @@ export default class TwistedTreeline extends React.Component {
           <div style={downArrow}></div>
         </div>
 
-        <div>
-          {this.state.showAll ? <Champions names={this.state.nameData} champions={this.state.data} /> : null}
+        <div className={this.state.firstLoad ? 'hidden' : ''}>
+          <Champions fade={this.state.showAll} names={this.state.nameData} champions={this.state.data} />
         </div>
       </div>
     );
