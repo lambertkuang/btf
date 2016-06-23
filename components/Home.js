@@ -9,6 +9,7 @@ export default class Home extends React.Component {
     this.state = {
       loading: true,
       nameData: {},
+      imgData: {},
       data: [],
       showAll: false,
       firstLoad: true
@@ -28,11 +29,14 @@ export default class Home extends React.Component {
     axios.all([getNames(), getStats()])
     .then(axios.spread((names, stats) => {
       let nameData = {};
+      let imgData = {};
       for (let champ in names.data.data) {
         let champData = names.data.data[champ];
         nameData[champData.id] = champ;
+        imgData[champ.name] = champ.image;
       }
       this.setState({nameData: nameData});
+      this.setState({imgData: imgData});
       this.setState({data: stats.data});
       this.setState({loading: false});
     }));

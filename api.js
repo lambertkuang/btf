@@ -24,7 +24,8 @@ apiApp.get('/names', (req, res, next) => {
   const champData = axios.create({
     baseURL: 'https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion',
     params: {
-      api_key: API_KEY
+      api_key: API_KEY,
+      champData: 'image'
     }
   });
   champData.get('/')

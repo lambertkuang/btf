@@ -9,6 +9,7 @@ export default class TwistedTreeline extends React.Component {
     this.state = {
       data: [],
       nameData: {},
+      imgData: {},
       loading: true,
       showAll: false,
       firstLoad: true
@@ -27,11 +28,18 @@ export default class TwistedTreeline extends React.Component {
     axios.all([getNames(), getStats()])
     .then(axios.spread((names, stats) => {
       let nameData = {};
+      let imgData = {};
       for (let champ in names.data.data) {
         let champData = names.data.data[champ];
         nameData[champData.id] = champ;
+        imgData[champ.name] = champ.image;
       }
+
+      // nameData: {266: 'Aatrox'}
+      // imgData: {'Aatrox': {'w': 48, 'full': 'Aatrox.png', sprite: 'champion0.png', 'h': ...}}
+      // data: [{championId: 266, winRate: 0.55, pickRate: ...}]
       this.setState({nameData: nameData});
+      this.setState({imgData: imgData});
       this.setState({data: stats.data});
       this.setState({loading: false});
     }));
