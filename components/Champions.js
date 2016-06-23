@@ -54,7 +54,7 @@ export default class Champions extends React.Component {
 
     return (
       <div>
-        <div style={searchStyle}>
+        <div style={searchStyle} className={this.props.fade ? 'fade-in' : 'fade-out'}>
           <Search search={this.handleSearch} />
         </div>
         <ul className={this.props.fade ? 'fade-in' : 'fade-out'} style={listStyle}>

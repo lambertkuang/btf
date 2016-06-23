@@ -15,9 +15,10 @@ export default class NavBar extends React.Component {
       padding: 'initial',
       display: 'flex',
       alignItems: 'center',
-      background: 'white',
+      background: '#BBBBBB',
       textAlign: 'center',
-      height: '2em'
+      height: '2em',
+      zIndex: 1
     };
 
     const listStyle = {
