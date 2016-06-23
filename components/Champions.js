@@ -6,8 +6,11 @@ export default class Champions extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      champInfo: []
+      champInfo: [],
+      filtered: []
     };
+    this.handleSearch = this.handleSearch.bind(this);
+    this.mapData = this.mapData.bind(this);
   }
 
   mapData() {
@@ -16,16 +19,20 @@ export default class Champions extends React.Component {
       champ.name = this.props.names[champ.championId];
       return champ;
     });
-    this.setState({champInfo: champInfo});
+    this.setState({
+      champInfo: champInfo,
+      filtered: champInfo
+    });
   }
 
   handleSearch(event) {
     const input = event.target.value.toString() || '';
 
-    // TODO: create and set state to list which champs to display
-    return this.state.champInfo.filter((champ) => {
-      return champ.name.indexOf(input) >= 0;
+    const filteredChamps = this.state.champInfo.filter((champ) => {
+      return champ.name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     });
+
+    this.setState({filtered: filteredChamps});
   }
 
   componentDidMount() {
@@ -39,15 +46,23 @@ export default class Champions extends React.Component {
       flexWrap: 'wrap'
     };
 
+    const searchStyle = {
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop: '1em'
+    };
+
     return (
       <div>
-        <Search search={this.handleSearch} />
+        <div style={searchStyle}>
+          <Search search={this.handleSearch} />
+        </div>
         <ul className={this.props.fade ? 'fade-in' : 'fade-out'} style={listStyle}>
           {
-            this.props.champions.map((champ) => {
+            this.state.filtered.map((champ) => {
               return (
                 <li key={champ.championId}>
-                  <Portrait name={this.props.names[champ.championId]} winRate={champ.winRate || 0} />
+                  <Portrait name={champ.name} winRate={champ.winRate || 0} />
                 </li>
               );
             })

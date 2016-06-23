@@ -8,7 +8,7 @@ export default class Search extends React.Component {
   render() {
     return (
       <div>
-        <input type=text onChange={this.props.search} />
+        <input type='text' onChange={this.props.search} />
       </div>
     );
   }

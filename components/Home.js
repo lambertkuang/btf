@@ -109,6 +109,10 @@ export default class Home extends React.Component {
     const showText = this.state.showAll ? 'Hide' : 'Show all';
     const loading = this.state.loading ? 'Loading...' : '';
 
+    if (!this.state.data.length) {
+      return <div style={showAllStyle}>{loading}</div>;
+    }
+
     return (
       <div>
         <div style={top5Style}>
