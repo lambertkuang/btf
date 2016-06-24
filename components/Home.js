@@ -33,26 +33,19 @@ export default class Home extends React.Component {
       for (let champ in names.data.data) {
         let champData = names.data.data[champ];
         nameData[champData.id] = champ;
-        imgData[champ.name] = champ.image;
+        imgData[champData.name] = champData.image;
       }
+
+      let champInfo = stats.data.map((champ) => {
+        champ.name = nameData[champ.championId];
+        return champ;
+      });
+
       this.setState({nameData: nameData});
       this.setState({imgData: imgData});
-      this.setState({data: stats.data});
+      this.setState({data: champInfo});
       this.setState({loading: false});
     }));
-  }
-
-  sortData() {
-    if (this.state.loading) {
-      return <div>Loading data...</div>;
-    }
-    return this.state.data.map((champ) => {
-      return (
-        <li key={champ.championId}>
-          <Portrait name={this.state.nameData[champ.championId]} winRate={champ.winRate} />
-        </li>
-      );
-    });
   }
 
   getTop5() {
@@ -68,7 +61,7 @@ export default class Home extends React.Component {
     return top5.map((champ) => {
       return (
         <li key={champ.championId}>
-          <Portrait name={this.state.nameData[champ.championId]} winRate={champ.winRate} />
+          <Portrait name={this.state.nameData[champ.championId]} winRate={champ.winRate} image={this.state.imgData[champ.name]} />
         </li>
       );
     });
@@ -134,7 +127,7 @@ export default class Home extends React.Component {
         </div>
 
         <div className={this.state.firstLoad ? 'hidden' : ''}>
-          <Champions fade={this.state.showAll} names={this.state.nameData} champions={this.state.data} />
+          <Champions fade={this.state.showAll} names={this.state.nameData} champions={this.state.data} images={this.state.imgData} />
         </div>
       </div>
     );

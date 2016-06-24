@@ -22,9 +22,29 @@ export default class Portrait extends React.Component {
       width: '4em'
     };
 
+    function getImage(img) {
+      if (img) {
+        return {
+          backgroundImage: 'url(' + 'images/' + img.sprite + ')',
+          backgroundPosition: img.x + 'px ' + img.y + 'px',
+          height: img.h + 'px',
+          width: img.w + 'px'
+        };
+      } else {
+        return {
+          backgroundImage: 'url(' + 'images/champion4.png' + ')',
+          backgroundPosition: '30px 30px',
+          height: '48px',
+          width: '48px'
+        };
+      }
+    }
+
     return (
       <div style={portraitBox}>
-        <img style={picStyle} src={'http://ddragon.leagueoflegends.com/cdn/6.12.1/img/champion/' + this.props.name + '.png'}/>
+        <div style={getImage(this.props.image)}>
+        </div>
+
         <div>{this.props.name}</div>
         <div>{this.props.winRate.toFixed(2)}</div>
       </div>

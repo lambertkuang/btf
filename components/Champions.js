@@ -19,6 +19,7 @@ export default class Champions extends React.Component {
       champ.name = this.props.names[champ.championId];
       return champ;
     });
+
     this.setState({
       champInfo: champInfo,
       filtered: champInfo
@@ -62,7 +63,7 @@ export default class Champions extends React.Component {
             this.state.filtered.map((champ) => {
               return (
                 <li key={champ.championId}>
-                  <Portrait name={champ.name} winRate={champ.winRate || 0} />
+                  <Portrait name={champ.name} winRate={champ.winRate || 0} image={this.props.images[champ.name]} />
                 </li>
               );
             })
