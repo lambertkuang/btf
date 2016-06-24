@@ -11,6 +11,7 @@ import {fillEmUp, getMoreMatches} from './helpers/workers';
 import {calculateStats, calculate3v3Stats} from './helpers/stats';
 import Match from './schemas/matches';
 import {apiApp} from './api';
+import './helpers/getSprites';
 
 const app = express();
 
