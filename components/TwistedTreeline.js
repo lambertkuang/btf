@@ -31,7 +31,7 @@ export default class TwistedTreeline extends React.Component {
       let imgData = {};
       for (let champ in names.data.data) {
         let champData = names.data.data[champ];
-        nameData[champData.id] = champ;
+        nameData[champData.id] = champData.name;
         imgData[champData.name] = champData.image;
       }
 

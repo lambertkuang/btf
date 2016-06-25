@@ -26,14 +26,14 @@ export default class Portrait extends React.Component {
       if (img) {
         return {
           backgroundImage: 'url(' + 'images/' + img.sprite + ')',
-          backgroundPosition: img.x + 'px ' + img.y + 'px',
+          backgroundPosition: '-' + img.x + 'px -' + img.y + 'px',
           height: img.h + 'px',
           width: img.w + 'px'
         };
       } else {
         return {
           backgroundImage: 'url(' + 'images/champion4.png' + ')',
-          backgroundPosition: '30px 30px',
+          backgroundPosition: '-432px -48px',
           height: '48px',
           width: '48px'
         };
