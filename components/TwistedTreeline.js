@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Portrait from './Portrait';
 import Champions from './Champions';
+import {banRank} from '../helpers/banRank';
 
 export default class TwistedTreeline extends React.Component {
   constructor() {
@@ -35,10 +36,10 @@ export default class TwistedTreeline extends React.Component {
         imgData[champData.name] = champData.image;
       }
 
-      let champInfo = stats.data.map((champ) => {
+      let champInfo = banRank(stats.data.map((champ) => {
         champ.name = nameData[champ.championId];
         return champ;
-      });
+      }));
 
       // nameData: {266: 'Aatrox'}
       // imgData: {'Aatrox': {'w': 48, 'full': 'Aatrox.png', sprite: 'champion0.png', 'h': ...}}
@@ -52,18 +53,12 @@ export default class TwistedTreeline extends React.Component {
 
   getTop5() {
     const top5 = this.state.data.slice().sort((a, b) => {
-      if (a.winRate > b.winRate) {
-        return -1;
-      }
-      if (a.winRate < b.winRate) {
-        return 1;
-      }
-      return 0;
+      return b.banPriority - a.banPriority;
     }).slice(0, 5);
     return top5.map((champ) => {
       return (
         <li key={champ.championId}>
-          <Portrait name={this.state.nameData[champ.championId]} winRate={champ.winRate} image={this.state.imgData[champ.name]} />
+          <Portrait name={this.state.nameData[champ.championId]} winRate={champ.winRate || 0} image={this.state.imgData[champ.name]} />
         </li>
       );
     });
