@@ -110,7 +110,7 @@ export default class TwistedTreeline extends React.Component {
     return (
       <div>
         <div style={top5Style}>
-          <h2>Top 5 Win Rates</h2>
+          <h2>best 5 bans</h2>
           <ul style={listStyle}>
             {loading}
             {this.getTop5()}

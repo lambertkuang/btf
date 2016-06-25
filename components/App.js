@@ -14,7 +14,7 @@ export default React.createClass({
       <div>
         <NavBar/>
         <header style={headerStyle}>
-          <h1>Champion Stats</h1>
+          <h1>ban these fools</h1>
         </header>
         {this.props.children}
       </div>
