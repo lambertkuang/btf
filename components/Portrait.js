@@ -135,6 +135,13 @@ export default class Portrait extends React.Component {
       ctx.fillText(upperName, (canvas.width / 2) - (textWidth / 2), 180);
     });
 
+    // use the image from spritesheet
+    const champPic = new Image();
+    champPic.src = 'images/' + img.sprite;
+    champPic.onload = () => {
+      ctx.drawImage(champPic, img.x, img.y, img.h, img.w, 51, 76, img.h, img.w);
+    };
+
     ctx.stroke();
   }
 
