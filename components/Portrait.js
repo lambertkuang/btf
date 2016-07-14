@@ -139,8 +139,7 @@ export default class Portrait extends React.Component {
 
       return (
         <div style={portraitBox}>
-          <div style={getImage(this.props.image)}>
-          </div>
+          <div style={getImage(this.props.image)}></div>
 
           <div>{this.props.name}</div>
           <div>{this.props.winRate.toFixed(2)}</div>
