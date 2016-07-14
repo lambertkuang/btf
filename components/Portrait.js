@@ -72,7 +72,6 @@ export default class Portrait extends React.Component {
     let upperName = name.toUpperCase();
 
     ctx.fillStyle = 'black';
-    // ctx.strokeRect(51, 76, 48, 48);
     ctx.font = '40px Cowboy';
     let wantedWidth = ctx.measureText('WANTED').width;
     ctx.fillText('WANTED', (canvas.width / 2) - (wantedWidth / 2), 60);
