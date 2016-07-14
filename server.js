@@ -46,6 +46,7 @@ function renderPage(appHtml) {
       <link rel="stylesheet" href="/index.css">
     </head>
     <body>
+      <span style="font-family: 'Cowboy'">&nbsp;</span>
       <div id="app">${appHtml}</div>
       <script src="/bundle.js"></script>
     </body>

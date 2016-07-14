@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Cowboy';
+  src: url('fonts/CowboyMovie.ttf');
+}
+
 .active {
   color: green;
 }

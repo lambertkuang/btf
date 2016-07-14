@@ -113,33 +113,25 @@ export default class Portrait extends React.Component {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Text and center rectangle
-    // let upperName = name.toUpperCase();
+    // Text and image
 
-    // ctx.fillStyle = 'black';
+    let upperName = name.toUpperCase();
+
+    ctx.fillStyle = 'black';
     // ctx.strokeRect(51, 76, 48, 48);
-    // ctx.font = '28px Cowboy';
-    // let textWidth = ctx.measureText(upperName).width;
-    // ctx.fillText('WANTED', 20, 60);
-    // ctx.fillText(upperName, (canvas.width / 2) - (textWidth / 2), 180);
+    ctx.font = '40px Cowboy';
+    let wantedWidth = ctx.measureText('WANTED').width;
+    ctx.fillText('WANTED', (canvas.width / 2) - (wantedWidth / 2), 60);
 
-    const f = new FontFace('Cowboy', 'url(fonts/CowboyMovie.ttf)');
-    f.load().then(() => {
-      let upperName = name.toUpperCase();
-
-      ctx.fillStyle = 'black';
-      ctx.strokeRect(51, 76, 48, 48);
-      ctx.font = '28px Cowboy';
-      let textWidth = ctx.measureText(upperName).width;
-      ctx.fillText('WANTED', 20, 60);
-      ctx.fillText(upperName, (canvas.width / 2) - (textWidth / 2), 180);
-    });
+    ctx.font = '30px Cowboy';
+    let textWidth = ctx.measureText(upperName).width;
+    ctx.fillText(upperName, (canvas.width / 2) - (textWidth / 2), 180);
 
     // use the image from spritesheet
     const champPic = new Image();
     champPic.src = 'images/' + img.sprite;
     champPic.onload = () => {
-      ctx.drawImage(champPic, img.x, img.y, img.h, img.w, 51, 76, img.h, img.w);
+      ctx.drawImage(champPic, img.x, img.y, img.h, img.w, (canvas.width / 2) - (img.w / 2), (canvas.height / 2) - (img.h / 2), img.h, img.w);
     };
 
     ctx.stroke();
@@ -147,7 +139,7 @@ export default class Portrait extends React.Component {
 
   render() {
     return (
-      <canvas ref='canvas' width='150' height='200'>
+      <canvas ref='canvas' width='160' height='200'>
 
       </canvas>
     );
