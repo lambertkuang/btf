@@ -41,3 +41,4 @@ node_modules/
 public/bundle.js
 server.bundle.js
 public/images
+.idea/
